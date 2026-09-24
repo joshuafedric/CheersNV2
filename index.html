@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Amber Awards – Cognizant bLink</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:#0b0418;color:#f3d38a;font-family:system-ui,sans-serif;overflow:hidden}
+.carousel{position:relative;height:100%;display:flex;align-items:center;justify-content:center;padding:env(safe-area-inset-top,0) 0 40px}
+.track{position:absolute;inset:0 0 40px;display:flex;align-items:center;justify-content:center}
+.track img{position:absolute;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;opacity:0;transition:opacity .5s;pointer-events:none;user-select:none}
+.track img.on{opacity:1}
+.nav{position:absolute;top:calc(50% - 20px);transform:translateY(-50%);width:52px;height:52px;border-radius:50%;border:2px solid #e9b949;background:rgba(20,6,40,.65);color:#e9b949;font-size:26px;cursor:pointer;z-index:2;transition:.2s}
+.nav:hover{background:#e9b949;color:#1a0633}
+.prev{left:14px}.next{right:14px}
+.bar{position:absolute;bottom:0;left:0;right:0;height:40px;display:flex;align-items:center;justify-content:center;gap:12px;font-size:14px}
+.dots{display:flex;gap:6px}
+.dots i{width:8px;height:8px;border-radius:50%;background:#4b2a7a;cursor:pointer}
+.dots i.on{background:#e9b949}
+@media(max-width:600px){.nav{width:38px;height:38px;font-size:20px}.dots{display:none}}
+</style>
+</head>
+<body>
+<div class="carousel" id="c">
+  <button class="nav prev" aria-label="Previous">&#10094;</button>
+  <div class="track" id="t"></div>
+  <button class="nav next" aria-label="Next">&#10095;</button>
+  <div class="bar"><span id="n"></span><div class="dots" id="d"></div></div>
+</div>
+<script>
+const S=["images/01.jpg","images/02.jpg","images/03.jpg","images/04.jpg","images/05.jpg","images/06.jpg","images/07.jpg","images/08.jpg","images/09.jpg","images/10.jpg","images/11.jpg","images/12.jpg","images/13.jpg","images/14.jpg","images/15.jpg","images/16.jpg","images/17.jpg","images/18.jpg","images/19.jpg","images/20.jpg"];
+const t=document.getElementById('t'),d=document.getElementById('d'),n=document.getElementById('n');
+let i=0;
+S.forEach((s,k)=>{
+  const im=new Image();im.src=s;im.alt='Award slide '+(k+1);t.appendChild(im);
+  const b=document.createElement('i');b.onclick=()=>go(k);d.appendChild(b);
+});
+function go(k){
+  i=(k+S.length)%S.length;
+  [...t.children].forEach((e,j)=>e.classList.toggle('on',j===i));
+  [...d.children].forEach((e,j)=>e.classList.toggle('on',j===i));
+  n.textContent=(i+1)+' / '+S.length;
+}
+document.querySelector('.prev').onclick=()=>go(i-1);
+document.querySelector('.next').onclick=()=>go(i+1);
+addEventListener('keydown',e=>{if(e.key==='ArrowLeft')go(i-1);if(e.key==='ArrowRight')go(i+1)});
+let x0=null;
+c.addEventListener('touchstart',e=>x0=e.touches[0].clientX,{passive:true});
+c.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>40)go(i+(dx<0?1:-1));x0=null});
+go(0);
+</script>
+</body>
+</html>
